@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from ..models import User
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
- ChangeEmailForm, PasswordResetForm, PasswordResetRequestForm
+    ChangeEmailForm, PasswordResetForm, PasswordResetRequestForm
 from .. import db
 from ..email import send_email
 
@@ -11,11 +11,13 @@ from ..email import send_email
 @auth.before_app_request
 def before_request():
 
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.blueprint != 'auth' \
-            and request.endpoint != 'statix':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint \
+                and request.blueprint != 'auth' \
+                and request.endpoint != 'statix':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/login', methods=['GET', 'POST'])
