@@ -22,7 +22,8 @@ def index():
                 send_email(
                     current_app.config['FLASKY_ADMIN'],
                     'New User',
-                    'mail/new_user', user=user
+                    'mail/new_user',
+                    user=user
                 )
         else:
             session['name'] = form.name.data
@@ -34,4 +35,13 @@ def index():
         name=session.get('name'),
         known=session.get('known', False),
         current_time=datetime.utcnow()
+    )
+
+
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template(
+        'user.html',
+        user=user
     )
