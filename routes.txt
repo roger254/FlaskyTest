@@ -1,0 +1,17 @@
+Endpoint                     Methods    Rule
+---------------------------  ---------  ---------------------------------
+auth.change_email            GET        /auth/change_email/<token>
+auth.change_email_request    GET, POST  /auth/change_email
+auth.change_password         GET, POST  /auth/change-password
+auth.confirm                 GET        /auth/confirm/<token>
+auth.login                   GET, POST  /auth/login
+auth.logout                  GET        /auth/logout
+auth.password_reset          GET, POST  /auth/reset/<token>
+auth.password_reset_request  GET, POST  /auth/reset
+auth.register                GET, POST  /auth/register
+auth.resend_confirmation     GET        /auth/confirm
+auth.unconfirmed             GET        /auth/unconfirmed
+bootstrap.static             GET        /static/bootstrap/<path:filename>
+main.index                   GET, POST  /
+static                       GET        /static/<path:filename>
+                              
