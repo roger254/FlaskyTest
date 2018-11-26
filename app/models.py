@@ -4,6 +4,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db
 from flask_login import UserMixin, AnonymousUserMixin
 from . import login_manager
+from datetime import datetime
 
 
 class Permission:
@@ -140,6 +141,12 @@ class User(UserMixin, db.Model):
         default=False
     )
 
+    name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    about_me = db.Column(db.Text())
+    member = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
 
@@ -251,6 +258,11 @@ class User(UserMixin, db.Model):
         db.session.add(self)
 
         return True
+
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return '<User %r>' % self.username
