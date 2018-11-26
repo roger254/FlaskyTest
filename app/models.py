@@ -62,7 +62,7 @@ class Role(db.Model):
                 Permission.WRITE,
                 Permission.MODERATE
             ],
-            'Administator': [
+            'Administrator': [
                 Permission.FOLLOW,
                 Permission.COMMENT,
                 Permission.WRITE,

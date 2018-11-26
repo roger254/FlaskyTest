@@ -12,8 +12,6 @@ D
 app/models.py,e/9/e919f1e867cfa561970ba9549250f4d5bb90bcf6
 A
 app/main/views.py,c/c/cc43e4be7c62617f249e2209c916336258ea5357
-6
-app.py,1/3/13cce7fd076299c81b4986166f3d822791c9490e
 <
 app/email.py,f/3/f31736a5b3400e24277165889dcbcaa748a7e20a
 ?
