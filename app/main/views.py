@@ -23,7 +23,8 @@ def index():
                 send_email(
                     current_app.config['FLASKY_ADMIN'],
                     'New User',
-                    'mail/new_user', user=user
+                    'mail/new_user',
+                    user=user
                 )
         else:
             session['name'] = form.name.data
@@ -38,6 +39,7 @@ def index():
     )
 
 
+<<<<<<< HEAD
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -60,3 +62,12 @@ def edit_profile():
     form.about_me.data = current_user.about_me.data
 
     return render_template('edit_profile.html', form=form)
+=======
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template(
+        'user.html',
+        user=user
+    )
+>>>>>>> user-profile-page
