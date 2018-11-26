@@ -56,6 +56,7 @@ def edit_profile():
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
+
         db.session.add(current_user._get_current_object())
         db.session.commit()
 
@@ -83,6 +84,7 @@ def edit_profile_admin(id):
         user.role = Role.query.get(form.role.data)
         user.name = form.name.data
         user.location = form.location.data
+        user.about_me = form.about_me.data
 
         db.session.add(user)
         db.session.commit()

@@ -5,6 +5,8 @@ from . import db
 from flask_login import UserMixin, AnonymousUserMixin
 from . import login_manager
 from datetime import datetime
+import hashlib
+from flask import request
 
 
 class Permission:
@@ -146,6 +148,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    avatar_hash = db.Column(db.String(32))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -157,6 +160,9 @@ class User(UserMixin, db.Model):
 
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = self.gravatar_hash()
 
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)
@@ -255,6 +261,7 @@ class User(UserMixin, db.Model):
             return False
 
         self.email = new_email
+        self.avatar_hash = self.gravatar_hash()
         db.session.add(self)
 
         return True
@@ -263,6 +270,26 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
+
+    def gravatar_hash(self):
+        return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://secure.gravatar.com/avatar'
+
+        hash = self.avatar_hash or self.gravatar_hash()
+
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url,
+            hash=hash,
+            size=size,
+            default=default,
+            rating=rating
+        )
 
     def __repr__(self):
         return '<User %r>' % self.username

@@ -134,7 +134,7 @@ class UserModelTestCase(unittest.TestCase):
         db.session.add(u)
         db.session.commit()
         self.assertTrue(
-            (datetime.utcnow() - u.member_sice).total_seconds() < 3
+            (datetime.utcnow() - u.member_since).total_seconds() < 3
         )
         self.assertTrue(
             (datetime.utcnow() - u.last_seen).total_seconds() < 3
