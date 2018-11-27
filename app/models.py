@@ -13,6 +13,7 @@ class Permission:
     FOLLOW = 1
     COMMENT = 2
     WRITE = 4
+    WRITE_ARTICLES = 6
     MODERATE = 8
     ADMIN = 16
 
@@ -57,18 +58,21 @@ class Role(db.Model):
             'User': [
                 Permission.FOLLOW,
                 Permission.COMMENT,
-                Permission.WRITE
+                Permission.WRITE,
+                Permission.WRITE_ARTICLES
             ],
             'Moderator': [
                 Permission.FOLLOW,
                 Permission.COMMENT,
                 Permission.WRITE,
+                Permission.WRITE_ARTICLES,
                 Permission.MODERATE
             ],
             'Administrator': [
                 Permission.FOLLOW,
                 Permission.COMMENT,
                 Permission.WRITE,
+                Permission.WRITE_ARTICLES,
                 Permission.MODERATE,
                 Permission.ADMIN
             ]
@@ -129,25 +133,36 @@ class User(UserMixin, db.Model):
         index=True
     )
 
+    posts = db.relationship(
+        'Post',
+        backref='author',
+        lazy='dynamic'
+    )
+
     role_id = db.Column(
         db.Integer,
         db.ForeignKey('roles.id')
-    )
 
-    password_hash = db.Column(
-        db.String(128)
     )
-
     confirmed = db.Column(
         db.Boolean,
         default=False
     )
 
+    member_since = db.Column(
+        db.DateTime(),
+        default=datetime.utcnow
+    )
+
+    last_seen = db.Column(
+        db.DateTime(),
+        default=datetime.utcnow
+    )
+
     name = db.Column(db.String(64))
+    password_hash = db.Column(db.String(128))
     location = db.Column(db.String(64))
     about_me = db.Column(db.Text())
-    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
 
     def __init__(self, **kwargs):
@@ -293,6 +308,28 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class Post(db.Model):
+
+    __tablename__ = 'Posts'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    timestamp = db.Column(
+        db.DateTime,
+        index=True,
+        default=datetime.utcnow
+    )
+
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id')
+    )
+    body = db.Column(db.Text)
 
 
 class AnonymousUser(AnonymousUserMixin):
