@@ -2,7 +2,7 @@
     {% for post in posts %}
     <li class="post">
         <div class="post-thumbnail">
-            <a href="{{ url_for('.user', username=post.author.username) }}">
+            <a href="{{ url_for('.user', username=post.author.usernam) }}">
                 <img src="{{ post.author.gravatar(size=40) }}" class="img-rounded profile-thumbnail">
             </a>
         </div>
