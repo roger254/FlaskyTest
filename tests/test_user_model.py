@@ -12,6 +12,7 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
+        Role.insert_roles()
 
     def tearDown(self):
         db.session.remove()
@@ -118,7 +119,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(u.can(Permission.COMMENT))
         self.assertTrue(u.can(Permission.WRITE))
         self.assertTrue(u.can(Permission.MODERATE))
-        self.assertFalse(u.can(Permission.ADMIN))
+        self.assertTrue(u.can(Permission.ADMIN))
 
     def test_moderator_role(self):
         m = Role.query.filter_by(name='Moderator').first()
