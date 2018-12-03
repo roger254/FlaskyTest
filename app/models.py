@@ -131,7 +131,7 @@ class Follow(db.Model):
     )
 
     timestamp = db.Column(
-        db.Datetime,
+        db.DateTime,
         default=datetime.utcnow
     )
 
